@@ -1,0 +1,26 @@
+.DS_Store
+**/.DS_Store
+
+# Neovim generated state
+nvim/spell/*.spl
+nvim/.netrwhist
+nvim/session/
+nvim/sessions/
+nvim/shada/
+nvim/swap/
+nvim/undo/
+nvim/view/
+
+# tmux plugin checkout/cache directories
+tmux/plugins/
+
+# Local environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa
+id_ed25519
