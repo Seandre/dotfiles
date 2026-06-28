@@ -135,11 +135,46 @@ vim.opt.cursorlineopt = "number"
 
 -- Define the Cursor highlight group
 h(0, "Cursor", { fg = "NONE", bg = "#FFFFFF" })
+h(0, "StatusLine", { fg = "#d0d0d0", bg = "#242424" })
+h(0, "StatusLineNC", { fg = "#8a8a8a", bg = "#1f1f1f" })
+
+local neutral_lualine_theme = {
+  normal = {
+    a = { fg = "#1f1f1f", bg = "#c8c8c8", gui = "bold" },
+    b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+    c = { fg = "#d0d0d0", bg = "#242424" },
+  },
+  insert = {
+    a = { fg = "#1f1f1f", bg = "#a8a8a8", gui = "bold" },
+    b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+    c = { fg = "#d0d0d0", bg = "#242424" },
+  },
+  visual = {
+    a = { fg = "#1f1f1f", bg = "#d0b56b", gui = "bold" },
+    b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+    c = { fg = "#d0d0d0", bg = "#242424" },
+  },
+  replace = {
+    a = { fg = "#1f1f1f", bg = "#d47d7d", gui = "bold" },
+    b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+    c = { fg = "#d0d0d0", bg = "#242424" },
+  },
+  command = {
+    a = { fg = "#1f1f1f", bg = "#8fbc8f", gui = "bold" },
+    b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+    c = { fg = "#d0d0d0", bg = "#242424" },
+  },
+  inactive = {
+    a = { fg = "#8a8a8a", bg = "#1f1f1f" },
+    b = { fg = "#8a8a8a", bg = "#1f1f1f" },
+    c = { fg = "#8a8a8a", bg = "#1f1f1f" },
+  },
+}
 
 require("lualine").setup({
   options = {
     icons_enabled = true,
-    theme = "auto",
+    theme = neutral_lualine_theme,
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = {

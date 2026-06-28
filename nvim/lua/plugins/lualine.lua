@@ -22,10 +22,43 @@ return {
     ]])
 
     opts.options.globalstatus = true
+    local neutral_theme = {
+      normal = {
+        a = { fg = "#1f1f1f", bg = "#c8c8c8", gui = "bold" },
+        b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+        c = { fg = "#d0d0d0", bg = "#242424" },
+      },
+      insert = {
+        a = { fg = "#1f1f1f", bg = "#a8a8a8", gui = "bold" },
+        b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+        c = { fg = "#d0d0d0", bg = "#242424" },
+      },
+      visual = {
+        a = { fg = "#1f1f1f", bg = "#d0b56b", gui = "bold" },
+        b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+        c = { fg = "#d0d0d0", bg = "#242424" },
+      },
+      replace = {
+        a = { fg = "#1f1f1f", bg = "#d47d7d", gui = "bold" },
+        b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+        c = { fg = "#d0d0d0", bg = "#242424" },
+      },
+      command = {
+        a = { fg = "#1f1f1f", bg = "#8fbc8f", gui = "bold" },
+        b = { fg = "#d8d8d8", bg = "#3a3a3a" },
+        c = { fg = "#d0d0d0", bg = "#242424" },
+      },
+      inactive = {
+        a = { fg = "#8a8a8a", bg = "#1f1f1f" },
+        b = { fg = "#8a8a8a", bg = "#1f1f1f" },
+        c = { fg = "#8a8a8a", bg = "#1f1f1f" },
+      },
+    }
+
     -- Set custom options for lualine
     opts.options = vim.tbl_extend("force", opts.options or {}, {
       icons_enabled = true, -- Enable/disable icons in the statusline
-      theme = "auto", -- Theme for the statusline (you can change it to any available theme)
+      theme = neutral_theme, -- Keep the statusline neutral instead of inheriting blue-tinted theme colors
       component_separators = { left = "", right = "" }, -- Separators for components
       section_separators = { left = "", right = "" }, -- Separators for sections
       disabled_filetypes = {}, -- Filetypes to disable lualine for
