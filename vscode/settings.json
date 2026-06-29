@@ -180,7 +180,7 @@
     "[Default High Contrast]": {
       "comments": "#92949e",
       "strings": "#b3d3a9",
-      "numbers": "#d9b397",
+      "numbers": "#ff8555",
       "keywords": "#98add8",
       "functions": "#98add8",
       "variables": "#ffffff",
