@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal Neovim, tmux, Kitty, and VS Code configuration backup.
+Personal Neovim, tmux, Kitty, VS Code, and OpenCode configuration backup.
 
 ## Layout
 
@@ -9,6 +9,7 @@ Personal Neovim, tmux, Kitty, and VS Code configuration backup.
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf` on remote Linux hosts
 - `kitty/` -> `~/.config/kitty`
 - `vscode/settings.json` -> VS Code user `settings.json`
+- `opencode/` -> `~/.config/opencode` theme files
 
 ## Restore
 
@@ -19,6 +20,7 @@ mv ~/.config/nvim ~/.config/nvim.bak
 mv ~/.tmux.conf ~/.tmux.conf.bak
 mv ~/.config/kitty ~/.config/kitty.bak
 mv "$HOME/Library/Application Support/Code/User/settings.json" "$HOME/Library/Application Support/Code/User/settings.json.bak"
+mv ~/.config/opencode/tui.json ~/.config/opencode/tui.json.bak
 ```
 
 Symlink these configs:
@@ -28,6 +30,9 @@ ln -s ~/dotfiles/nvim ~/.config/nvim
 ln -s ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/kitty ~/.config/kitty
 ln -s ~/dotfiles/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+mkdir -p ~/.config/opencode
+ln -s ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
+ln -s ~/dotfiles/opencode/themes ~/.config/opencode/themes
 ```
 
 For remote Linux hosts accessed through VS Code Remote SSH, use the portable tmux config instead:
@@ -45,3 +50,7 @@ The VS Code settings keep `Default High Contrast` enabled and scope terminal col
 Most ANSI accent colors are copied from `kitty/theme.conf`, but the default foreground, cursor, selection, black, and white slots are neutralized to better match the live Kitty configuration, where `kitty/theme.conf` is not currently included. The terminal background is pure black to match VS Code's high contrast workbench background.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here. The `terminal.integrated.minimumContrastRatio` value is set to `1` so VS Code does not remap the tracked Gruvbox ANSI colors under the high contrast theme.
+
+## OpenCode Theme
+
+The OpenCode TUI theme is selected with `opencode/tui.json` and defined in `opencode/themes/vscode-high-contrast.json`. It mirrors the VS Code terminal setup: pure black background, near-white text, neutral panels and borders, and Gruvbox-derived accent colors.
