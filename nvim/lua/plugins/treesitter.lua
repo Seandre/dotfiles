@@ -1,20 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter-refactor",
-  },
   opts = {
-    refactor = {
-      highlight_definitions = { enable = false },
-      navigation = {
-        enable = true,
-        keymaps = {
-          list_definitions_toc = false,
-          goto_next_usage = "<C-n>",
-          goto_previous_usage = "<C-p>",
-        },
-      },
-    },
     incremental_selection = {
       enable = true,
       keymaps = {
