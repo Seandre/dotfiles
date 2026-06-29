@@ -105,9 +105,9 @@ The terminal background and base text color come from local VS Code. The tmux st
 
 ## VS Code Theme
 
-The VS Code settings keep `Default High Contrast` enabled and scope all color overrides to that theme. This avoids maintaining a custom VS Code extension while still making the editor, side bar, tabs, status bar, panel, inputs, lists, diagnostics, diffs, token colors, and integrated terminal share a high-contrast palette tuned for readability: black surfaces, near-white text, lighter muted text, clear blue selections, and cool blue/cyan accents.
+The VS Code settings keep `Default High Contrast` enabled and scope all color overrides to that theme. This avoids maintaining a custom VS Code extension while still making the editor, side bar, tabs, status bar, panel, inputs, lists, diagnostics, diffs, token colors, and integrated terminal share a high-contrast palette tuned for readability: pure black surfaces, near-white text, lighter muted text, neutral graphite selections, and desaturated cool accents.
 
-The integrated terminal font is set to Kitty's `SF Mono` at size `12`. Terminal ANSI colors keep the same general families as the Kitty palette, but low-contrast colors are brightened for readability on pure black. The terminal and editor background are pure black to match VS Code's high contrast workbench background.
+The integrated terminal font is set to Kitty's `SF Mono` at size `12`. Terminal ANSI colors keep the same general families as the Kitty palette, but low-contrast colors are brightened and desaturated for readability on pure black. The terminal and editor background are pure black to match VS Code's high contrast workbench background.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here. The `terminal.integrated.minimumContrastRatio` value is set to `1` so VS Code does not remap the tracked Gruvbox ANSI colors under the high contrast theme.
 
