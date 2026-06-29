@@ -1,0 +1,31 @@
+{
+  "workbench.colorTheme": "Default High Contrast",
+  "terminal.integrated.fontFamily": "SF Mono",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "workbench.colorCustomizations": {
+    "[Default High Contrast]": {
+      "terminal.foreground": "#ebdbb2",
+      "terminal.background": "#282828",
+      "terminalCursor.foreground": "#928374",
+      "terminal.selectionBackground": "#ebdbb2",
+      "terminal.selectionForeground": "#928374",
+      "terminal.ansiBlack": "#665c54",
+      "terminal.ansiRed": "#cc241d",
+      "terminal.ansiGreen": "#98971a",
+      "terminal.ansiYellow": "#d79921",
+      "terminal.ansiBlue": "#458588",
+      "terminal.ansiMagenta": "#b16286",
+      "terminal.ansiCyan": "#689d6a",
+      "terminal.ansiWhite": "#a89984",
+      "terminal.ansiBrightBlack": "#7c6f64",
+      "terminal.ansiBrightRed": "#fb4934",
+      "terminal.ansiBrightGreen": "#b8bb26",
+      "terminal.ansiBrightYellow": "#fabd2f",
+      "terminal.ansiBrightBlue": "#83a598",
+      "terminal.ansiBrightMagenta": "#d3869b",
+      "terminal.ansiBrightCyan": "#8ec07c",
+      "terminal.ansiBrightWhite": "#bdae93"
+    }
+  }
+}
