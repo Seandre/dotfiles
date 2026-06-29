@@ -60,31 +60,48 @@ local map = LazyVim.safe_keymap_set
 --                           Buffer Section
 -------------------------------------------------------------------------------
 
+local last_editor_buffer
+
+local function is_editor_buffer(buf)
+  return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted and vim.bo[buf].buftype == "" and vim.bo[buf].filetype ~= "neo-tree"
+end
+
+local function remember_editor_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  if is_editor_buffer(buf) then
+    last_editor_buffer = buf
+  end
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+  group = vim.api.nvim_create_augroup("UserLastEditorBuffer", { clear = true }),
+  callback = remember_editor_buffer,
+})
+
 local function close_editor_buffer()
-  local function is_editor_window(win)
-    local buf = vim.api.nvim_win_get_buf(win)
-    return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" and vim.bo[buf].filetype ~= "neo-tree"
+  local current_buf = vim.api.nvim_get_current_buf()
+  local target_buf = is_editor_buffer(current_buf) and current_buf or nil
+
+  if not target_buf and last_editor_buffer and is_editor_buffer(last_editor_buffer) then
+    target_buf = last_editor_buffer
   end
 
-  local current_win = vim.api.nvim_get_current_win()
-  local target_win = is_editor_window(current_win) and current_win or nil
-
-  if not target_win then
+  if not target_buf then
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-      if is_editor_window(win) then
-        target_win = win
+      local buf = vim.api.nvim_win_get_buf(win)
+      if is_editor_buffer(buf) then
+        target_buf = buf
         break
       end
     end
   end
 
-  if not target_win then
+  if not target_buf then
+    vim.notify("No editor buffer to close", vim.log.levels.INFO)
     return
   end
 
-  vim.api.nvim_win_call(target_win, function()
-    vim.cmd("confirm bd")
-  end)
+  Snacks.bufdelete(target_buf)
 end
 
 map("n", "<Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
