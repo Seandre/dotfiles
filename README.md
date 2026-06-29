@@ -103,13 +103,15 @@ opencode
 
 The terminal background and base text color come from local VS Code. The tmux status, pane borders, copy mode, and OpenCode UI colors come from the remote dotfiles.
 
-## VS Code Terminal
+## VS Code Theme
 
-The VS Code settings keep `Default High Contrast` enabled and scope terminal color overrides to that theme. The integrated terminal font is set to Kitty's `SF Mono` at size `12`.
+The VS Code settings keep `Default High Contrast` enabled and scope all color overrides to that theme. This avoids maintaining a custom VS Code extension while still making the editor, side bar, tabs, status bar, panel, inputs, lists, diagnostics, diffs, token colors, and integrated terminal share the same high-contrast palette.
 
-Most ANSI accent colors are copied from `kitty/theme.conf`, but the default foreground, cursor, selection, black, and white slots are neutralized to better match the live Kitty configuration, where `kitty/theme.conf` is not currently included. The terminal background is pure black to match VS Code's high contrast workbench background.
+The integrated terminal font is set to Kitty's `SF Mono` at size `12`. Most ANSI accent colors are copied from `kitty/theme.conf`, but the default foreground, cursor, selection, black, and white slots are neutralized to better match the live Kitty configuration, where `kitty/theme.conf` is not currently included. The terminal and editor background are pure black to match VS Code's high contrast workbench background.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here. The `terminal.integrated.minimumContrastRatio` value is set to `1` so VS Code does not remap the tracked Gruvbox ANSI colors under the high contrast theme.
+
+A packaged custom VS Code theme is also possible, but it requires a theme extension or VSIX install. For these dotfiles, `workbench.colorCustomizations` and `editor.tokenColorCustomizations` are the lower-maintenance path.
 
 ## OpenCode Theme
 
