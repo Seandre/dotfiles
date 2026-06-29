@@ -43,6 +43,66 @@ ln -s ~/dotfiles/tmux/remote.tmux.conf ~/.tmux.conf
 
 The remote config avoids TPM plugins, macOS-only clipboard commands, local paths, battery/status helpers, and Nerd Font glyphs. Clipboard integration uses tmux's native `set-clipboard on`, which works with OSC52 when the terminal and SSH path allow it.
 
+## Remote SSH Linux Setup
+
+The VS Code terminal colors are local user settings. Apply `vscode/settings.json` on the Mac that runs VS Code; Remote SSH terminals inherit those colors because they render inside the local VS Code window. Do not symlink the VS Code or Kitty configs on the Linux host unless that host also runs those apps directly.
+
+On the remote Linux host, install the terminal-side tools and clone these dotfiles:
+
+```sh
+# Debian/Ubuntu example
+sudo apt update
+sudo apt install -y git tmux curl
+
+# Install OpenCode if you plan to run it on the remote host.
+# Requires a working Node/npm install.
+npm install -g opencode-ai
+
+git clone git@github.com:Seandre/dotfiles.git ~/dotfiles
+```
+
+Use the portable tmux config on the remote host:
+
+```sh
+mv ~/.tmux.conf ~/.tmux.conf.bak 2>/dev/null || true
+ln -s ~/dotfiles/tmux/remote.tmux.conf ~/.tmux.conf
+```
+
+Install the OpenCode theme on the remote host if you run `opencode` there:
+
+```sh
+mkdir -p ~/.config/opencode
+mv ~/.config/opencode/tui.json ~/.config/opencode/tui.json.bak 2>/dev/null || true
+mv ~/.config/opencode/themes ~/.config/opencode/themes.bak 2>/dev/null || true
+ln -s ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
+ln -s ~/dotfiles/opencode/themes ~/.config/opencode/themes
+```
+
+Make sure truecolor is available in the remote shell. Add this to the remote shell profile if `echo $COLORTERM` is empty:
+
+```sh
+export COLORTERM=truecolor
+```
+
+Expected terminal values:
+
+```sh
+echo "$COLORTERM"        # truecolor or 24bit
+echo "$TERM"             # xterm-256color outside tmux, tmux-256color inside tmux
+tmux -V
+opencode --version
+```
+
+Validation flow from VS Code Remote SSH:
+
+```sh
+# In a VS Code Remote SSH integrated terminal
+tmux new -A -s main
+opencode
+```
+
+The terminal background and base text color come from local VS Code. The tmux status, pane borders, copy mode, and OpenCode UI colors come from the remote dotfiles.
+
 ## VS Code Terminal
 
 The VS Code settings keep `Default High Contrast` enabled and scope terminal color overrides to that theme. The integrated terminal font is set to Kitty's `SF Mono` at size `12`.
