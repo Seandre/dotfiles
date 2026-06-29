@@ -42,6 +42,6 @@ The remote config avoids TPM plugins, macOS-only clipboard commands, local paths
 
 The VS Code settings keep `Default High Contrast` enabled and scope terminal color overrides to that theme. The integrated terminal font is set to Kitty's `SF Mono` at size `12`.
 
-Most ANSI accent colors are copied from `kitty/theme.conf`, but the default foreground, background, cursor, selection, black, and white slots are neutralized to better match the live Kitty configuration, where `kitty/theme.conf` is not currently included and the visible background is shaped by macOS transparency and blur.
+Most ANSI accent colors are copied from `kitty/theme.conf`, but the default foreground, cursor, selection, black, and white slots are neutralized to better match the live Kitty configuration, where `kitty/theme.conf` is not currently included. The terminal background is pure black to match VS Code's high contrast workbench background.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here. The `terminal.integrated.minimumContrastRatio` value is set to `1` so VS Code does not remap the tracked Gruvbox ANSI colors under the high contrast theme.
