@@ -57,18 +57,42 @@ local map = LazyVim.safe_keymap_set
 -- map("t", "<C-;>", "<cmd>wincmd l<cr>", { desc = "Go to Right Window" })
 
 -------------------------------------------------------------------------------
---                           Tab Section
+--                           Buffer Section
 -------------------------------------------------------------------------------
 
-map("n", "<tab><tab>", "<cmd>tabnew<cr>", { desc = "Tab New" })
-map("n", "<tab>j", "<cmd>tabn<cr>", { desc = "Tab Next" })
-map("n", "<tab>;", "<cmd>tabp<cr>", { desc = "Tab Prev" })
-map("n", "<tab>n", "<cmd>tabn<cr>", { desc = "Tab Next" })
-map("n", "<tab>p", "<cmd>tabp<cr>", { desc = "Tab Prev" })
-map("n", "<tab>c", "<cmd>tabc<cr>", { desc = "Tab Close" })
-map("n", "<tab>q", "<cmd>tabc<cr>", { desc = "Tab Close" })
-map("n", "<tab>q", "<cmd>tabc<cr>", { desc = "Tab Close" })
-map("n", "<tab>r", "<cmd>Tabby rename ", { desc = "Tab Rename" })
+local function close_editor_buffer()
+  local function is_editor_window(win)
+    local buf = vim.api.nvim_win_get_buf(win)
+    return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "" and vim.bo[buf].filetype ~= "neo-tree"
+  end
+
+  local current_win = vim.api.nvim_get_current_win()
+  local target_win = is_editor_window(current_win) and current_win or nil
+
+  if not target_win then
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if is_editor_window(win) then
+        target_win = win
+        break
+      end
+    end
+  end
+
+  if not target_win then
+    return
+  end
+
+  vim.api.nvim_win_call(target_win, function()
+    vim.cmd("confirm bd")
+  end)
+end
+
+map("n", "<Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+map("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+map("n", "<leader>bn", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+map("n", "<leader>bp", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+map("n", "<leader>bc", close_editor_buffer, { desc = "Close Buffer" })
+map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", { desc = "Close Other Buffers" })
 
 -------------------------------------------------------------------------------
 --                           Misc/Util Section
@@ -226,7 +250,7 @@ map("n", "<leader>z", "<cmd>ZenMode<CR>", { desc = "Transparency" })
 map(
   "n",
   "<localleader>do",
-  "<cmd>tabnew<cr><cmd>Tabby rename_tab Database<cr><cmd>DBUIToggle<CR>",
+  "<cmd>tabnew<cr><cmd>DBUIToggle<CR>",
   { desc = "Open Database" }
 )
 map("n", "<localleader>du", "<cmd>DBUIToggle<CR>", { desc = "Toggle Database" })

@@ -25,6 +25,8 @@ vim.opt.listchars = {
 vim.g.maplocalleader = ","
 
 vim.opt.termguicolors = true
+vim.opt.hidden = true
+vim.opt.showtabline = 2
 
 -- Default is 4
 vim.opt.sidescrolloff = 0
