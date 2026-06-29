@@ -47,9 +47,11 @@ return {
     sources = {
       -- adding any nvim-cmp sources here will enable them
       -- with blink.compat
-      compat = {},
       default = { "lsp", "path", "snippets", "buffer" },
-      cmdline = function()
+    },
+
+    cmdline = {
+      sources = function()
         local type = vim.fn.getcmdtype()
         if type == "/" or type == "?" then
           return { "buffer" }
