@@ -106,6 +106,14 @@ scripts/update-vscode-remote-theme.sh --tmux
 
 This copies `tmux/remote.tmux.conf` to `~/.tmux.conf` and reloads tmux if a tmux server is already running.
 
+To revert OpenCode to its built-in default TUI theme inside the Linux environment:
+
+```sh
+scripts/revert-opencode-tui-default.sh
+```
+
+This backs up and removes the OpenCode TUI theme selector and the custom `vscode-high-contrast` theme file from `~/.config/opencode`.
+
 ## Remote SSH Linux Setup
 
 The VS Code terminal colors are local user settings. Apply `vscode/settings.json` on the Mac that runs VS Code; Remote SSH terminals inherit those colors because they render inside the local VS Code window. Do not symlink the VS Code or Kitty configs on the Linux host unless that host also runs those apps directly.
