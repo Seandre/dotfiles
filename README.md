@@ -83,7 +83,7 @@ Do not install the Kitty config on the Linux host unless Kitty is running there 
 
 ## Remote Theme Updater
 
-After pulling new theme changes on a Linux host used through VS Code Remote SSH, run the focused updater from the remote dotfiles checkout:
+After pulling new theme changes in the Linux environment where OpenCode runs, run the focused updater from the dotfiles checkout. For Windows VS Code -> Remote SSH -> dev container, this means the shell inside the dev container:
 
 ```sh
 cd ~/dotfiles
@@ -91,13 +91,20 @@ git pull --ff-only
 scripts/update-vscode-remote-theme.sh
 ```
 
-This updates the remote terminal-side files used by the VS Code integrated terminal -> tmux -> OpenCode path:
+By default this copies only the OpenCode theme files used by the VS Code integrated terminal -> tmux -> OpenCode path:
 
-- `tmux/remote.tmux.conf` -> `~/.tmux.conf`
 - `opencode/tui.json` -> `~/.config/opencode/tui.json`
 - `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
 
-The script validates the OpenCode JSON when `node` is available, reloads tmux if a tmux server is already running, and leaves VS Code user settings alone because those live on the local machine running VS Code.
+The script validates the OpenCode JSON when `node` is available, backs up replaced files to `*.bak-YYYYmmddHHMMSS`, and leaves VS Code user settings alone because those live on the local machine running VS Code. It copies files instead of symlinking them by default, which is safer for dev containers.
+
+To also update tmux inside the Linux environment, pass `--tmux`:
+
+```sh
+scripts/update-vscode-remote-theme.sh --tmux
+```
+
+This copies `tmux/remote.tmux.conf` to `~/.tmux.conf` and reloads tmux if a tmux server is already running.
 
 ## Remote SSH Linux Setup
 

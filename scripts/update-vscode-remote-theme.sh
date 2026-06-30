@@ -4,50 +4,91 @@ set -eu
 repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 opencode_config_dir=${OPENCODE_CONFIG_DIR:-"$HOME/.config/opencode"}
 opencode_themes_dir="$opencode_config_dir/themes"
+install_tmux=false
 
 usage() {
   cat <<EOF
-Usage: scripts/update-vscode-remote-theme.sh
+Usage: scripts/update-vscode-remote-theme.sh [--tmux]
 
-Run this on a Linux host used from VS Code Remote SSH, inside the dotfiles
-checkout. It updates the remote terminal-side theme files:
+Run this inside the Linux environment where opencode runs. For a Windows VS Code
+Remote/Dev Container setup, that means the shell inside the container.
 
-  ~/.tmux.conf
+By default this copies only the OpenCode theme files:
+
   ~/.config/opencode/tui.json
   ~/.config/opencode/themes/vscode-high-contrast.json
 
-VS Code's own font and terminal color settings are local to the machine running
-VS Code, not the remote host.
+Pass --tmux to also copy tmux/remote.tmux.conf to ~/.tmux.conf and reload tmux
+when a tmux server is running.
+
+VS Code font, theme, and terminal color settings live on the Windows machine
+running VS Code, not inside the SSH host or dev container.
 EOF
 }
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --tmux)
+      install_tmux=true
+      ;;
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
+    *)
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
 
 backup_path() {
   path=$1
   printf "%s.bak-%s" "$path" "$(date +%Y%m%d%H%M%S)"
 }
 
-link_path() {
+backup_if_exists() {
+  path=$1
+
+  if [ -e "$path" ] || [ -L "$path" ]; then
+    backup=$(backup_path "$path")
+    mv "$path" "$backup"
+    printf "backup: %s -> %s\n" "$path" "$backup"
+  fi
+}
+
+copy_file() {
   source=$1
   target=$2
 
   mkdir -p "$(dirname -- "$target")"
 
   if [ -L "$target" ]; then
-    current=$(readlink "$target")
-    if [ "$current" = "$source" ]; then
-      printf "ok: %s -> %s\n" "$target" "$source"
-      return
-    fi
+    backup_if_exists "$target"
+    cp "$source" "$target"
+    printf "copy: %s -> %s\n" "$source" "$target"
+    return
   fi
 
-  if [ -e "$target" ] || [ -L "$target" ]; then
-    backup=$(backup_path "$target")
-    mv "$target" "$backup"
-    printf "backup: %s -> %s\n" "$target" "$backup"
+  if [ -f "$target" ] && cmp -s "$source" "$target"; then
+    printf "ok: %s already current\n" "$target"
+    return
   fi
 
-  ln -s "$source" "$target"
-  printf "link: %s -> %s\n" "$target" "$source"
+  backup_if_exists "$target"
+  cp "$source" "$target"
+  printf "copy: %s -> %s\n" "$source" "$target"
+}
+
+ensure_real_dir() {
+  path=$1
+
+  if [ -L "$path" ]; then
+    backup_if_exists "$path"
+  fi
+
+  mkdir -p "$path"
 }
 
 validate_json() {
@@ -66,23 +107,15 @@ validate_json() {
 }
 
 install_opencode_theme() {
-  mkdir -p "$opencode_config_dir"
-  link_path "$repo_dir/opencode/tui.json" "$opencode_config_dir/tui.json"
+  ensure_real_dir "$opencode_config_dir"
+  ensure_real_dir "$opencode_themes_dir"
 
-  if [ -L "$opencode_themes_dir" ]; then
-    current=$(readlink "$opencode_themes_dir")
-    if [ "$current" = "$repo_dir/opencode/themes" ]; then
-      printf "ok: %s -> %s\n" "$opencode_themes_dir" "$repo_dir/opencode/themes"
-      return
-    fi
-  fi
-
-  mkdir -p "$opencode_themes_dir"
-  link_path "$repo_dir/opencode/themes/vscode-high-contrast.json" "$opencode_themes_dir/vscode-high-contrast.json"
+  copy_file "$repo_dir/opencode/tui.json" "$opencode_config_dir/tui.json"
+  copy_file "$repo_dir/opencode/themes/vscode-high-contrast.json" "$opencode_themes_dir/vscode-high-contrast.json"
 }
 
 install_tmux_config() {
-  link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+  copy_file "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
 
   if ! command -v tmux >/dev/null 2>&1; then
     printf "skip: tmux not found, reload skipped\n"
@@ -97,23 +130,17 @@ install_tmux_config() {
   fi
 }
 
-case "${1:-}" in
-  "" )
-    validate_json
-    install_opencode_theme
-    install_tmux_config
+validate_json
+install_opencode_theme
 
-    if [ -z "${COLORTERM:-}" ]; then
-      printf "note: COLORTERM is empty; set COLORTERM=truecolor in the remote shell profile if colors look downgraded\n"
-    fi
+if [ "$install_tmux" = true ]; then
+  install_tmux_config
+else
+  printf "skip: tmux config unchanged; pass --tmux to update ~/.tmux.conf\n"
+fi
 
-    printf "done: restart opencode inside tmux to load the updated theme\n"
-    ;;
-  -h|--help|help )
-    usage
-    ;;
-  * )
-    usage >&2
-    exit 2
-    ;;
-esac
+if [ -z "${COLORTERM:-}" ]; then
+  printf "note: COLORTERM is empty; set COLORTERM=truecolor in the container shell profile if colors look downgraded\n"
+fi
+
+printf "done: restart opencode inside tmux to load the updated theme\n"
