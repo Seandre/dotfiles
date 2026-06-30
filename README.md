@@ -67,6 +67,8 @@ This links:
 - `vscode/settings.json` -> macOS VS Code user `settings.json`
 - `opencode/tui.json` and `opencode/themes/` -> `~/.config/opencode`
 
+The macOS tmux config enables mouse support so pane clicks, scrolling, resizing, and drag selection stay pane-aware. Copy-mode selections copy to the macOS clipboard through `pbcopy`.
+
 On a remote Linux host used through VS Code Remote SSH:
 
 ```sh

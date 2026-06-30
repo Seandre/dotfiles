@@ -1,12 +1,9 @@
 require("config.lazy")
 
--- Colorscheme
-local colorscheme = "sonokai"
-
-vim.cmd("colorscheme " .. colorscheme)
+local colorscheme = vim.g.colors_name
 local h = vim.api.nvim_set_hl
 
-if colorscheme == "kanagawa-wave" or "kanagawa-dragon" then
+if colorscheme == "kanagawa-wave" or colorscheme == "kanagawa-dragon" then
   h(0, "WinSeparator", { fg = "#1F3442", bg = "NONE", bold = true })
   -- typescript
   h(0, "@keyword.coroutine.tsx", { fg = "#53758D", italic = true })
