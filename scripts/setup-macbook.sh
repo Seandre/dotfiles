@@ -56,6 +56,26 @@ link_path() {
   printf "link: %s -> %s\n" "$target" "$source"
 }
 
+validate_json() {
+  if ! command -v node >/dev/null 2>&1; then
+    printf "skip: node not found, JSON validation skipped\n"
+    return
+  fi
+
+  node -e '
+    const fs = require("fs");
+    for (const file of process.argv.slice(1)) {
+      JSON.parse(fs.readFileSync(file, "utf8"));
+      console.log("ok: valid JSON " + file);
+    }
+  ' \
+    "$repo_dir/vscode/settings.json" \
+    "$repo_dir/opencode/tui.json" \
+    "$repo_dir/opencode/themes/vscode-high-contrast.json"
+}
+
+validate_json
+
 link_path "$repo_dir/nvim" "$HOME/.config/nvim"
 link_path "$repo_dir/tmux/tmux.conf" "$HOME/.tmux.conf"
 link_path "$repo_dir/kitty" "$HOME/.config/kitty"

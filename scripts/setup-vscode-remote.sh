@@ -5,6 +5,8 @@ repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 opencode_config_dir=${OPENCODE_CONFIG_DIR:-"$HOME/.config/opencode"}
 opencode_themes_dir="$opencode_config_dir/themes"
 custom_theme_name=${OPENCODE_THEME_NAME:-"vscode-high-contrast"}
+vscode_server_dir=${VSCODE_AGENT_FOLDER:-"$HOME/.vscode-server"}
+vscode_machine_settings="$vscode_server_dir/data/Machine/settings.json"
 copy_opencode=false
 revert_opencode=false
 
@@ -13,7 +15,7 @@ usage() {
 Usage: scripts/setup-vscode-remote.sh [--copy-opencode] [--revert-opencode-theme]
 
 Install the Linux profile used through VS Code Remote SSH:
-  nvim, portable tmux, and OpenCode terminal theme files.
+  nvim, portable tmux, VS Code Server machine settings, and OpenCode terminal theme files.
 
 Options:
   --copy-opencode           Copy OpenCode theme files instead of symlinking them.
@@ -122,7 +124,10 @@ validate_json() {
       JSON.parse(fs.readFileSync(file, "utf8"));
       console.log("ok: valid JSON " + file);
     }
-  ' "$repo_dir/opencode/tui.json" "$repo_dir/opencode/themes/vscode-high-contrast.json"
+  ' \
+    "$repo_dir/vscode/settings.json" \
+    "$repo_dir/opencode/tui.json" \
+    "$repo_dir/opencode/themes/vscode-high-contrast.json"
 }
 
 install_opencode_links() {
@@ -173,6 +178,7 @@ validate_json
 
 link_path "$repo_dir/nvim" "$HOME/.config/nvim"
 link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+link_path "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
 
 if [ "$copy_opencode" = true ]; then
   install_opencode_copies

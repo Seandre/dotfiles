@@ -5,7 +5,7 @@ Personal Neovim, tmux, Kitty, VS Code, and OpenCode configuration backup.
 This repo is organized around two environments:
 
 - `macbook-kitty`: local macOS setup using Kitty, full tmux plugins, local VS Code settings, Neovim, and OpenCode.
-- `linux-vscode-remote`: remote Linux setup used through VS Code Remote SSH, with portable tmux, Neovim, and OpenCode terminal config only.
+- `linux-vscode-remote`: remote Linux setup used through VS Code Remote SSH, with portable tmux, Neovim, VS Code Server settings, and OpenCode terminal config.
 
 ## Layout
 
@@ -47,9 +47,10 @@ This links:
 
 - `nvim/` -> `~/.config/nvim`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf`
+- `vscode/settings.json` -> VS Code Server machine `settings.json`
 - `opencode/tui.json` and `opencode/themes/` -> `~/.config/opencode`
 
-Do not install the Kitty config on the Linux host unless Kitty is running there directly. Do not install the VS Code settings on the Linux host for Remote SSH; the integrated terminal is rendered by the local VS Code app.
+Do not install the Kitty config on the Linux host unless Kitty is running there directly. The remote setup script installs the same VS Code settings into the VS Code Server machine settings path, using `VSCODE_AGENT_FOLDER` when available and otherwise `~/.vscode-server/data/Machine/settings.json`.
 
 For dev containers or other remote environments where symlinks back to the dotfiles checkout are not desirable, copy the OpenCode theme files instead:
 
@@ -57,7 +58,7 @@ For dev containers or other remote environments where symlinks back to the dotfi
 ~/dotfiles/scripts/setup-vscode-remote.sh --copy-opencode
 ```
 
-This still links Neovim and tmux, but copies:
+This still links Neovim, tmux, and VS Code Server settings, but copies:
 
 - `opencode/tui.json` -> `~/.config/opencode/tui.json`
 - `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
@@ -74,7 +75,7 @@ The remote tmux config avoids TPM plugins, macOS-only clipboard commands, local 
 
 ## Remote SSH Linux Setup
 
-The VS Code terminal colors are local user settings. Apply `vscode/settings.json` on the Mac that runs VS Code; Remote SSH terminals inherit those colors because they render inside the local VS Code window. Do not symlink the VS Code or Kitty configs on the Linux host unless that host also runs those apps directly.
+The VS Code terminal colors are installed by both setup scripts. On the Mac that runs VS Code, `scripts/setup-macbook.sh` links `vscode/settings.json` into the local user settings path. On a Remote SSH host, `scripts/setup-vscode-remote.sh` links the same file into the VS Code Server machine settings path. Do not symlink the Kitty config on the Linux host unless that host also runs Kitty directly.
 
 On the remote Linux host, install the terminal-side tools and clone these dotfiles:
 
@@ -119,17 +120,17 @@ tmux new -A -s main
 opencode
 ```
 
-The terminal background and base text color come from local VS Code. The tmux status, pane borders, copy mode, and OpenCode UI colors come from the remote dotfiles.
+The terminal background and base text color come from the shared VS Code settings installed by the setup scripts. The tmux status, pane borders, copy mode, and OpenCode UI colors come from the remote dotfiles.
 
 ## VS Code Theme
 
-The active VS Code settings keep `Default High Contrast` enabled without custom color overrides. This lets the local MacBook VS Code window show the built-in high contrast defaults while testing the matching OpenCode theme on a remote Linux host.
+The active VS Code settings use `Dark Modern` as a stable built-in host theme, then override the visible UI, syntax, and terminal colors with the Gruvbox dark hard palette from `ellisonleao/gruvbox.nvim`. All VS Code background slots are forced to pure black, and normal editor/UI text is forced to pure white to match the Neovim Gruvbox override. This keeps the theme symlinkable as a normal VS Code `settings.json` instead of requiring a packaged VS Code extension.
 
-The integrated terminal font is not overridden; VS Code uses its default terminal font settings. Terminal colors are provided by VS Code's built-in `Default High Contrast` theme, with `terminal.integrated.minimumContrastRatio` set to `1` so terminal apps such as OpenCode can render the exact truecolor values from their themes.
+The integrated terminal font is not overridden; VS Code uses its default terminal font settings. Terminal colors are provided by the Gruvbox ANSI mapping in `vscode/settings.json`, with `terminal.integrated.minimumContrastRatio` set to `1` so terminal apps such as OpenCode can render exact theme colors without VS Code contrast adjustment.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here.
 
-The previous custom color override version is saved at `vscode/settings.custom-high-contrast.json`.
+The previous custom high contrast override version is saved at `vscode/settings.custom-high-contrast.json`.
 
 ## OpenCode Theme
 
