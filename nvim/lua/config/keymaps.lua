@@ -156,16 +156,8 @@ function DeleteMark()
   vim.cmd("delmarks " .. mark)
 end
 
-local search = require("improved-search")
-
--- Search current word
-map("n", "*", search.current_word)
-
--- Search selected text in visual mode
-map("x", "*", search.in_place) -- search selection without moving
-
--- Search by motion in place, |ib searching in the nearest pairs
-map("n", "|", search.in_place)
+-- Search current word / selection with built-in Vim behavior.
+map("n", "*", "*", { desc = "Search word under cursor" })
 
 -- Center when finding
 map("n", "n", "nzzzv", { desc = "Next find and center" })
@@ -228,14 +220,6 @@ map("n", "<leader>db", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { des
 -------------------------------------------------------------------------------
 --                           Windows Section
 -------------------------------------------------------------------------------
-
--- Navigate Between Neovim and Kitty splits
--- Disable the default mappings from vim-kitty-navigator
--- vim.g.kitty_navigator_no_mappings = 1
--- map("n", "<C-j>", ":KittyNavigateLeft<CR>", { noremap = true, silent = true })
--- map("n", "<C-k>", ":KittyNavigateDown<CR>", { noremap = true, silent = true })
--- map("n", "<C-l>", ":KittyNavigateUp<CR>", { noremap = true, silent = true })
--- map("n", "<C-;>", ":KittyNavigateRight<CR>", { noremap = true, silent = true })
 
 -- Resize with arrows
 map("n", "<Up>", "<cmd>resize +3<cr>", { desc = "Increase Window Height" })

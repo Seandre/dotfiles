@@ -81,7 +81,6 @@ return {
         { "<leader>gg", desc = " LazyGit", icon = { icon = "󰋣 ", color = "azure" } },
         { "<leader>gf", desc = " LazyGit File History", icon = { icon = "󰋣 ", color = "azure" } },
         { "<leader>gm", desc = " Commit Messsge", icon = { icon = " ", color = "azure" } },
-        { "<leader>gG", desc = " Git Graph", icon = { icon = " ", color = "azure" } },
 
         { "<leader>aa", desc = "Toggle ", icon = { icon = " ", color = "yellow" } },
         { "<leader>am", desc = "Select Model ", icon = { icon = " ", color = "yellow" } },
