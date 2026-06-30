@@ -17,46 +17,14 @@ This repo is organized around two environments:
 - `vscode/settings.custom-high-contrast.json` -> saved custom VS Code high contrast overrides
 - `opencode/` -> `~/.config/opencode` theme files
 
-## Restore
+## Setup
 
-Back up any existing config first:
-
-```sh
-mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.tmux.conf ~/.tmux.conf.bak
-mv ~/.config/kitty ~/.config/kitty.bak
-mv "$HOME/Library/Application Support/Code/User/settings.json" "$HOME/Library/Application Support/Code/User/settings.json.bak"
-mv ~/.config/opencode/tui.json ~/.config/opencode/tui.json.bak
-```
-
-Symlink these configs:
-
-```sh
-ln -s ~/dotfiles/nvim ~/.config/nvim
-ln -s ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
-ln -s ~/dotfiles/kitty ~/.config/kitty
-ln -s ~/dotfiles/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
-mkdir -p ~/.config/opencode
-ln -s ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
-ln -s ~/dotfiles/opencode/themes ~/.config/opencode/themes
-```
-
-For remote Linux hosts accessed through VS Code Remote SSH, use the portable tmux config instead:
-
-```sh
-ln -s ~/dotfiles/tmux/remote.tmux.conf ~/.tmux.conf
-```
-
-The remote config avoids TPM plugins, macOS-only clipboard commands, local paths, battery/status helpers, and Nerd Font glyphs. Clipboard integration uses tmux's native `set-clipboard on`, which works with OSC52 when the terminal and SSH path allow it.
-
-## Profile Installer
-
-The recommended path is to install the profile for the machine you are on. The installer backs up existing files/directories to `*.bak-YYYYmmddHHMMSS` before creating symlinks.
+Use the setup script for the machine you are on. Both scripts back up existing files/directories to `*.bak-YYYYmmddHHMMSS` before replacing them.
 
 On the MacBook using Kitty:
 
 ```sh
-~/dotfiles/scripts/install-profile.sh macbook-kitty
+~/dotfiles/scripts/setup-macbook.sh
 ```
 
 This links:
@@ -72,7 +40,7 @@ The macOS tmux config enables mouse support so pane clicks, scrolling, resizing,
 On a remote Linux host used through VS Code Remote SSH:
 
 ```sh
-~/dotfiles/scripts/install-profile.sh linux-vscode-remote
+~/dotfiles/scripts/setup-vscode-remote.sh
 ```
 
 This links:
@@ -83,38 +51,26 @@ This links:
 
 Do not install the Kitty config on the Linux host unless Kitty is running there directly. Do not install the VS Code settings on the Linux host for Remote SSH; the integrated terminal is rendered by the local VS Code app.
 
-## Remote Theme Updater
-
-After pulling new theme changes in the Linux environment where OpenCode runs, run the focused updater from the dotfiles checkout. For Windows VS Code -> Remote SSH -> dev container, this means the shell inside the dev container:
+For dev containers or other remote environments where symlinks back to the dotfiles checkout are not desirable, copy the OpenCode theme files instead:
 
 ```sh
-cd ~/dotfiles
-git pull --ff-only
-scripts/update-vscode-remote-theme.sh
+~/dotfiles/scripts/setup-vscode-remote.sh --copy-opencode
 ```
 
-By default this copies only the OpenCode theme files used by the VS Code integrated terminal -> tmux -> OpenCode path:
+This still links Neovim and tmux, but copies:
 
 - `opencode/tui.json` -> `~/.config/opencode/tui.json`
 - `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
 
-The script validates the OpenCode JSON when `node` is available, backs up replaced files to `*.bak-YYYYmmddHHMMSS`, and leaves VS Code user settings alone because those live on the local machine running VS Code. It copies files instead of symlinking them by default, which is safer for dev containers.
-
-To also update tmux inside the Linux environment, pass `--tmux`:
-
-```sh
-scripts/update-vscode-remote-theme.sh --tmux
-```
-
-This copies `tmux/remote.tmux.conf` to `~/.tmux.conf` and reloads tmux if a tmux server is already running.
-
 To revert OpenCode to its built-in default TUI theme inside the Linux environment:
 
 ```sh
-scripts/revert-opencode-tui-default.sh
+~/dotfiles/scripts/setup-vscode-remote.sh --revert-opencode-theme
 ```
 
 This backs up and removes the OpenCode TUI theme selector and the custom `vscode-high-contrast` theme file from `~/.config/opencode`.
+
+The remote tmux config avoids TPM plugins, macOS-only clipboard commands, local paths, battery/status helpers, and Nerd Font glyphs. Clipboard integration uses tmux's native `set-clipboard on`, which works with OSC52 when the terminal and SSH path allow it.
 
 ## Remote SSH Linux Setup
 
@@ -137,18 +93,7 @@ git clone git@github.com:Seandre/dotfiles.git ~/dotfiles
 Use the portable tmux config on the remote host:
 
 ```sh
-mv ~/.tmux.conf ~/.tmux.conf.bak 2>/dev/null || true
-ln -s ~/dotfiles/tmux/remote.tmux.conf ~/.tmux.conf
-```
-
-Install the OpenCode theme on the remote host if you run `opencode` there:
-
-```sh
-mkdir -p ~/.config/opencode
-mv ~/.config/opencode/tui.json ~/.config/opencode/tui.json.bak 2>/dev/null || true
-mv ~/.config/opencode/themes ~/.config/opencode/themes.bak 2>/dev/null || true
-ln -s ~/dotfiles/opencode/tui.json ~/.config/opencode/tui.json
-ln -s ~/dotfiles/opencode/themes ~/.config/opencode/themes
+~/dotfiles/scripts/setup-vscode-remote.sh
 ```
 
 Make sure truecolor is available in the remote shell. Add this to the remote shell profile if `echo $COLORTERM` is empty:
