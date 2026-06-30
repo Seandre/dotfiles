@@ -1,5 +1,4 @@
 {
   "workbench.colorTheme": "Default High Contrast",
-  "terminal.integrated.fontFamily": "SF Mono",
-  "terminal.integrated.fontSize": 12
+  "terminal.integrated.minimumContrastRatio": 1
 }

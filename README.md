@@ -81,6 +81,24 @@ This links:
 
 Do not install the Kitty config on the Linux host unless Kitty is running there directly. Do not install the VS Code settings on the Linux host for Remote SSH; the integrated terminal is rendered by the local VS Code app.
 
+## Remote Theme Updater
+
+After pulling new theme changes on a Linux host used through VS Code Remote SSH, run the focused updater from the remote dotfiles checkout:
+
+```sh
+cd ~/dotfiles
+git pull --ff-only
+scripts/update-vscode-remote-theme.sh
+```
+
+This updates the remote terminal-side files used by the VS Code integrated terminal -> tmux -> OpenCode path:
+
+- `tmux/remote.tmux.conf` -> `~/.tmux.conf`
+- `opencode/tui.json` -> `~/.config/opencode/tui.json`
+- `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
+
+The script validates the OpenCode JSON when `node` is available, reloads tmux if a tmux server is already running, and leaves VS Code user settings alone because those live on the local machine running VS Code.
+
 ## Remote SSH Linux Setup
 
 The VS Code terminal colors are local user settings. Apply `vscode/settings.json` on the Mac that runs VS Code; Remote SSH terminals inherit those colors because they render inside the local VS Code window. Do not symlink the VS Code or Kitty configs on the Linux host unless that host also runs those apps directly.
@@ -145,7 +163,7 @@ The terminal background and base text color come from local VS Code. The tmux st
 
 The active VS Code settings keep `Default High Contrast` enabled without custom color overrides. This lets the local MacBook VS Code window show the built-in high contrast defaults while testing the matching OpenCode theme on a remote Linux host.
 
-The integrated terminal font is set to Kitty's `SF Mono` at size `12`. Terminal colors are provided by VS Code's built-in `Default High Contrast` theme.
+The integrated terminal font is not overridden; VS Code uses its default terminal font settings. Terminal colors are provided by VS Code's built-in `Default High Contrast` theme, with `terminal.integrated.minimumContrastRatio` set to `1` so terminal apps such as OpenCode can render the exact truecolor values from their themes.
 
 VS Code's integrated terminal does not natively support Kitty's `background_opacity 0.6`, `background_blur 15`, or dynamic background opacity, so those settings are intentionally not represented here.
 
@@ -153,4 +171,4 @@ The previous custom color override version is saved at `vscode/settings.custom-h
 
 ## OpenCode Theme
 
-The OpenCode TUI theme is selected with `opencode/tui.json` and defined in `opencode/themes/vscode-high-contrast.json`. OpenCode does not consume VS Code theme keys directly; it has its own fixed `theme.json` slots for base UI, diff, markdown, and syntax colors. The theme maps those slots to VS Code's built-in Dark High Contrast defaults from `hc_black.json`: pure black background, white foreground and borders, green selection as the primary UI accent, and the default High Contrast token colors for comments, strings, numbers, keywords, functions, variables, and types.
+The OpenCode TUI theme is selected with `opencode/tui.json` and defined in `opencode/themes/vscode-high-contrast.json`. OpenCode does not consume VS Code theme keys directly; it has its own fixed `theme.json` slots for base UI, diff, markdown, and syntax colors. The theme maps those slots to VS Code's built-in Dark High Contrast defaults from `hc_black.json`: pure black background, white foreground and borders, green selection as the primary UI accent, and the default High Contrast token colors for comments, strings, numbers, keywords, functions, variables, types, operators, punctuation, headings, and diffs.
