@@ -87,7 +87,7 @@ This backs up and removes the OpenCode TUI theme selector and the custom `vscode
 
 The remote Vim config keeps plain Vim legible in VS Code SSH terminals and tmux by forcing a dark background, white base text, visible Visual/Search highlights, and explicit Gruvbox-style syntax and diff colors.
 
-The remote tmux config avoids TPM plugins, local paths, battery/status helpers, and Nerd Font glyphs. It enables mouse support for pane clicks, scrolling, resizing, and drag selection. Copy-mode `y`, Enter, and mouse drag copy through `~/.local/bin/tmux-copy-to-clipboard`, which uses `pbcopy`, `wl-copy`, `xclip`, `xsel`, WSL `clip.exe`, or `powershell.exe` when available. It also keeps tmux's native `set-clipboard on` enabled for terminals that support OSC52.
+The remote tmux config avoids TPM plugins, local paths, battery/status helpers, and Nerd Font glyphs. It enables mouse support for pane clicks, scrolling, resizing, and drag selection. Copy-mode `y`, Enter, and mouse drag copy through `~/.local/bin/tmux-copy-to-clipboard`, which uses `pbcopy`, `wl-copy`, `xclip`, `xsel`, WSL `clip.exe`, or `powershell.exe` when available. It also keeps tmux's native `set-clipboard on` enabled for terminals that support OSC52, and passes truecolor through from VS Code's `xterm*` terminal so Vim colors match inside and outside tmux.
 
 ## Remote SSH Linux Setup
 
