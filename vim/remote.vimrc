@@ -29,6 +29,13 @@ set ttymouse=sgr
 set laststatus=2
 set wildmenu
 set pastetoggle=<F2>
+set formatoptions-=c
+set formatoptions-=r
+set formatoptions-=o
+
+if exists('$TMUX')
+  set paste
+endif
 
 highlight clear Normal
 highlight Normal ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
