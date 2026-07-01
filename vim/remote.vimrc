@@ -4,6 +4,13 @@ set nocompatible
 set background=dark
 set t_Co=256
 
+if exists('&t_BE')
+  let &t_BE = "\<Esc>[?2004h"
+endif
+if exists('&t_BD')
+  let &t_BD = "\<Esc>[?2004l"
+endif
+
 if has('termguicolors')
   if exists('$TMUX')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -21,6 +28,7 @@ set mouse=a
 set ttymouse=sgr
 set laststatus=2
 set wildmenu
+set pastetoggle=<F2>
 
 highlight clear Normal
 highlight Normal ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
