@@ -1,5 +1,4 @@
 {
-  "workbench.colorTheme": "Dark Modern",
   "terminal.integrated.minimumContrastRatio": 1,
   "workbench.colorCustomizations": {
     "[Dark Modern]": {
@@ -220,6 +219,15 @@
         },
         {
           "scope": [
+            "string.unquoted.ansible",
+            "string.unquoted-block.ansible"
+          ],
+          "settings": {
+            "foreground": "#d3869b"
+          }
+        },
+        {
+          "scope": [
             "constant.numeric",
             "constant.language.boolean",
             "constant.language.null"
@@ -376,5 +384,16 @@
         }
       ]
     }
-  }
+  },
+  "editor.semanticTokenColorCustomizations": {
+    "[Dark Modern]": {
+      "rules": {
+        "class:ansible": "#fabd2f",
+        "method:ansible": "#83a598",
+        "property.definition:ansible": "#8ec07c",
+        "keyword:ansible": "#fb4934"
+      }
+    }
+  },
+  "workbench.colorTheme": "Dark Modern"
 }
