@@ -123,7 +123,7 @@ Expected terminal values:
 
 ```sh
 echo "$COLORTERM"        # truecolor or 24bit
-echo "$TERM"             # xterm-256color outside tmux, tmux-256color inside tmux
+echo "$TERM"             # xterm-256color outside tmux, screen-256color inside tmux
 tmux -V
 opencode --version
 ```
