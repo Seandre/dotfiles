@@ -17,8 +17,8 @@ usage() {
 Usage: scripts/setup-vscode-remote.sh [--copy] [--copy-opencode] [--revert-opencode-theme]
 
 Install the Linux profile used through VS Code Remote SSH:
-  nvim, portable tmux, tmux clipboard helper, VS Code Server machine settings,
-  and OpenCode terminal theme files.
+  Vim, nvim, portable tmux, tmux clipboard helper, VS Code Server machine
+  settings, and OpenCode terminal theme files.
 
 Options:
   --copy                    Copy all installed config instead of symlinking.
@@ -231,11 +231,13 @@ export REPO_DIR
 validate_json
 
 if [ "$copy_all" = true ]; then
+  copy_file "$repo_dir/vim/remote.vimrc" "$HOME/.vimrc"
   copy_dir "$repo_dir/nvim" "$HOME/.config/nvim"
   copy_file "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
   copy_file "$repo_dir/tmux/copy-to-clipboard.sh" "$tmux_copy_command"
   copy_file "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
 else
+  link_path "$repo_dir/vim/remote.vimrc" "$HOME/.vimrc"
   link_path "$repo_dir/nvim" "$HOME/.config/nvim"
   link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
   link_path "$repo_dir/tmux/copy-to-clipboard.sh" "$tmux_copy_command"

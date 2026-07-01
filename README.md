@@ -10,6 +10,7 @@ This repo is organized around two environments:
 ## Layout
 
 - `nvim/` -> `~/.config/nvim`
+- `vim/remote.vimrc` -> `~/.vimrc` on remote Linux hosts
 - `tmux/tmux.conf` -> `~/.tmux.conf`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf` on remote Linux hosts
 - `kitty/` -> `~/.config/kitty`
@@ -46,6 +47,7 @@ On a remote Linux host used through VS Code Remote SSH:
 This links:
 
 - `nvim/` -> `~/.config/nvim`
+- `vim/remote.vimrc` -> `~/.vimrc`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf`
 - `tmux/copy-to-clipboard.sh` -> `~/.local/bin/tmux-copy-to-clipboard`
 - `vscode/settings.json` -> VS Code Server machine `settings.json`
@@ -62,6 +64,7 @@ For dev containers or other remote environments where symlinks back to the dotfi
 This copies:
 
 - `nvim/` -> `~/.config/nvim`
+- `vim/remote.vimrc` -> `~/.vimrc`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf`
 - `tmux/copy-to-clipboard.sh` -> `~/.local/bin/tmux-copy-to-clipboard`
 - `vscode/settings.json` -> VS Code Server machine `settings.json`
@@ -81,6 +84,8 @@ To revert OpenCode to its built-in default TUI theme inside the Linux environmen
 ```
 
 This backs up and removes the OpenCode TUI theme selector and the custom `vscode-high-contrast` theme file from `~/.config/opencode`.
+
+The remote Vim config keeps plain Vim legible in VS Code SSH terminals and tmux by forcing a dark background, white base text, visible Visual/Search highlights, and explicit Gruvbox-style syntax and diff colors.
 
 The remote tmux config avoids TPM plugins, local paths, battery/status helpers, and Nerd Font glyphs. It enables mouse support for pane clicks, scrolling, resizing, and drag selection. Copy-mode `y`, Enter, and mouse drag copy through `~/.local/bin/tmux-copy-to-clipboard`, which uses `pbcopy`, `wl-copy`, `xclip`, `xsel`, WSL `clip.exe`, or `powershell.exe` when available. It also keeps tmux's native `set-clipboard on` enabled for terminals that support OSC52.
 
@@ -118,7 +123,7 @@ Expected terminal values:
 
 ```sh
 echo "$COLORTERM"        # truecolor or 24bit
-echo "$TERM"             # xterm-256color outside tmux, tmux-256color inside tmux
+echo "$TERM"             # xterm-256color outside tmux, screen-256color inside tmux
 tmux -V
 opencode --version
 ```
