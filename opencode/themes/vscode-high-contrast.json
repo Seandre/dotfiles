@@ -3,56 +3,52 @@
   "defs": {
     "black": "#000000",
     "white": "#FFFFFF",
-    "text": "#FFFFFF",
-    "muted": "#7c7c7c",
-    "element": "#1e1e1e",
-    "selection": "#008000",
-    "invalid": "#f44747",
-    "comment": "#7ca668",
-    "keyword": "#569cd6",
-    "controlKeyword": "#C586C0",
-    "string": "#ce9178",
-    "regexpString": "#d16969",
-    "regexpConstant": "#b46695",
-    "number": "#b5cea8",
-    "function": "#DCDCAA",
-    "operator": "#d4d4d4",
-    "property": "#d7ba7d",
-    "heading": "#6796e6",
-    "type": "#4EC9B0",
-    "variable": "#9CDCFE",
-    "tagPunctuation": "#808080",
-    "searchContext": "#CBEDCB",
-    "diffHeader": "#000080"
+    "muted": "#928374",
+    "border": "#504945",
+    "borderSubtle": "#3C3836",
+    "red": "#FB4934",
+    "redNeutral": "#CC241D",
+    "green": "#B8BB26",
+    "greenNeutral": "#98971A",
+    "yellow": "#FABD2F",
+    "yellowNeutral": "#D79921",
+    "blue": "#83A598",
+    "blueNeutral": "#458588",
+    "purple": "#D3869B",
+    "purpleNeutral": "#B16286",
+    "aqua": "#8EC07C",
+    "aquaNeutral": "#689D6A",
+    "orange": "#FE8019",
+    "orangeNeutral": "#D65D0E"
   },
   "theme": {
     "primary": {
-      "dark": "selection",
-      "light": "selection"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "secondary": {
-      "dark": "keyword",
-      "light": "keyword"
+      "dark": "blue",
+      "light": "blue"
     },
     "accent": {
-      "dark": "type",
-      "light": "type"
+      "dark": "aqua",
+      "light": "aqua"
     },
     "error": {
-      "dark": "invalid",
-      "light": "invalid"
+      "dark": "red",
+      "light": "red"
     },
     "warning": {
-      "dark": "property",
-      "light": "property"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "success": {
-      "dark": "number",
-      "light": "number"
+      "dark": "green",
+      "light": "green"
     },
     "info": {
-      "dark": "keyword",
-      "light": "keyword"
+      "dark": "blue",
+      "light": "blue"
     },
     "text": {
       "dark": "white",
@@ -71,44 +67,44 @@
       "light": "black"
     },
     "backgroundElement": {
-      "dark": "element",
-      "light": "element"
+      "dark": "black",
+      "light": "black"
     },
     "border": {
-      "dark": "white",
-      "light": "white"
+      "dark": "border",
+      "light": "border"
     },
     "borderActive": {
-      "dark": "white",
-      "light": "white"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "borderSubtle": {
-      "dark": "muted",
-      "light": "muted"
+      "dark": "borderSubtle",
+      "light": "borderSubtle"
     },
     "diffAdded": {
-      "dark": "number",
-      "light": "number"
+      "dark": "green",
+      "light": "green"
     },
     "diffRemoved": {
-      "dark": "string",
-      "light": "string"
+      "dark": "red",
+      "light": "red"
     },
     "diffContext": {
       "dark": "muted",
       "light": "muted"
     },
     "diffHunkHeader": {
-      "dark": "diffHeader",
-      "light": "diffHeader"
+      "dark": "blue",
+      "light": "blue"
     },
     "diffHighlightAdded": {
-      "dark": "number",
-      "light": "number"
+      "dark": "green",
+      "light": "green"
     },
     "diffHighlightRemoved": {
-      "dark": "string",
-      "light": "string"
+      "dark": "red",
+      "light": "red"
     },
     "diffAddedBg": {
       "dark": "black",
@@ -135,96 +131,140 @@
       "light": "black"
     },
     "markdownText": {
-      "dark": "text",
-      "light": "text"
+      "dark": "white",
+      "light": "white"
     },
     "markdownHeading": {
-      "dark": "heading",
-      "light": "heading"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "markdownLink": {
-      "dark": "keyword",
-      "light": "keyword"
+      "dark": "blue",
+      "light": "blue"
     },
     "markdownLinkText": {
-      "dark": "variable",
-      "light": "variable"
+      "dark": "aqua",
+      "light": "aqua"
     },
     "markdownCode": {
-      "dark": "text",
-      "light": "text"
+      "dark": "green",
+      "light": "green"
     },
     "markdownBlockQuote": {
       "dark": "muted",
       "light": "muted"
     },
     "markdownEmph": {
-      "dark": "text",
-      "light": "text"
+      "dark": "purple",
+      "light": "purple"
     },
     "markdownStrong": {
       "dark": "white",
       "light": "white"
     },
     "markdownHorizontalRule": {
+      "dark": "border",
+      "light": "border"
+    },
+    "markdownListItem": {
       "dark": "white",
       "light": "white"
     },
-    "markdownListItem": {
-      "dark": "text",
-      "light": "text"
-    },
     "markdownListEnumeration": {
-      "dark": "text",
-      "light": "text"
+      "dark": "white",
+      "light": "white"
     },
     "markdownImage": {
-      "dark": "keyword",
-      "light": "keyword"
+      "dark": "blue",
+      "light": "blue"
     },
     "markdownImageText": {
-      "dark": "variable",
-      "light": "variable"
+      "dark": "aqua",
+      "light": "aqua"
     },
     "markdownCodeBlock": {
-      "dark": "text",
-      "light": "text"
+      "dark": "green",
+      "light": "green"
     },
     "syntaxComment": {
-      "dark": "comment",
-      "light": "comment"
+      "dark": "muted",
+      "light": "muted"
     },
     "syntaxKeyword": {
-      "dark": "keyword",
-      "light": "keyword"
+      "dark": "red",
+      "light": "red"
     },
     "syntaxFunction": {
-      "dark": "function",
-      "light": "function"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "syntaxVariable": {
-      "dark": "variable",
-      "light": "variable"
+      "dark": "white",
+      "light": "white"
     },
     "syntaxString": {
-      "dark": "string",
-      "light": "string"
+      "dark": "green",
+      "light": "green"
     },
     "syntaxNumber": {
-      "dark": "number",
-      "light": "number"
+      "dark": "purple",
+      "light": "purple"
     },
     "syntaxType": {
-      "dark": "type",
-      "light": "type"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "syntaxOperator": {
-      "dark": "operator",
-      "light": "operator"
+      "dark": "white",
+      "light": "white"
     },
     "syntaxPunctuation": {
-      "dark": "operator",
-      "light": "operator"
+      "dark": "white",
+      "light": "white"
+    },
+    "markdownBlock": {
+      "dark": "white",
+      "light": "white"
+    },
+    "markdownHash": {
+      "dark": "muted",
+      "light": "muted"
+    },
+    "markdownKey": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "markdownSummary": {
+      "dark": "white",
+      "light": "white"
+    },
+    "syntaxError": {
+      "dark": "red",
+      "light": "red"
+    },
+    "syntaxExpression": {
+      "dark": "white",
+      "light": "white"
+    },
+    "syntaxKey": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "syntaxKeyedExpression": {
+      "dark": "white",
+      "light": "white"
+    },
+    "syntaxLet": {
+      "dark": "red",
+      "light": "red"
+    },
+    "syntaxPlugin": {
+      "dark": "aqua",
+      "light": "aqua"
+    },
+    "syntaxViolation": {
+      "dark": "red",
+      "light": "red"
     }
   }
 }

@@ -52,16 +52,25 @@ This links:
 
 Do not install the Kitty config on the Linux host unless Kitty is running there directly. The remote setup script installs the same VS Code settings into the VS Code Server machine settings path, using `VSCODE_AGENT_FOLDER` when available and otherwise `~/.vscode-server/data/Machine/settings.json`.
 
-For dev containers or other remote environments where symlinks back to the dotfiles checkout are not desirable, copy the OpenCode theme files instead:
+For dev containers or other remote environments where symlinks back to the dotfiles checkout are not desirable, copy the installed config instead:
 
 ```sh
-~/dotfiles/scripts/setup-vscode-remote.sh --copy-opencode
+~/dotfiles/scripts/setup-vscode-remote.sh --copy
 ```
 
-This still links Neovim, tmux, and VS Code Server settings, but copies:
+This copies:
 
+- `nvim/` -> `~/.config/nvim`
+- `tmux/remote.tmux.conf` -> `~/.tmux.conf`
+- `vscode/settings.json` -> VS Code Server machine `settings.json`
 - `opencode/tui.json` -> `~/.config/opencode/tui.json`
 - `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
+
+`--copy-opencode` is still available for older workflows that only need OpenCode copied while keeping Neovim, tmux, and VS Code settings symlinked.
+
+For containerized environments, prefer `--copy`: it applies the VS Code theme settings, the portable tmux theme/config, and the OpenCode TUI theme as real files under the container user's home/config paths.
+
+If a container uses a nonstandard VS Code settings path, set `VSCODE_SETTINGS_PATH` to the exact target before running the script.
 
 To revert OpenCode to its built-in default TUI theme inside the Linux environment:
 
@@ -134,4 +143,4 @@ The previous custom high contrast override version is saved at `vscode/settings.
 
 ## OpenCode Theme
 
-The OpenCode TUI theme is selected with `opencode/tui.json` and defined in `opencode/themes/vscode-high-contrast.json`. OpenCode does not consume VS Code theme keys directly; it has its own fixed `theme.json` slots for base UI, diff, markdown, and syntax colors. The theme maps those slots to VS Code's built-in Dark High Contrast defaults from `hc_black.json`: pure black background, white foreground and borders, green selection as the primary UI accent, and the default High Contrast token colors for comments, strings, numbers, keywords, functions, variables, types, operators, punctuation, headings, and diffs.
+The OpenCode TUI theme is selected with `opencode/tui.json` and defined in `opencode/themes/vscode-high-contrast.json`. OpenCode does not consume VS Code theme keys directly; it has its own fixed `theme.json` slots for base UI, diff, markdown, and syntax colors. The theme maps every known slot from the installed OpenCode TUI theme surface to the same local VS Code color intent: pure black backgrounds, pure white base text, Gruvbox dark hard accents for syntax and diagnostics, and muted Gruvbox borders. The setup scripts validate that the selected OpenCode theme exists, every slot resolves to a defined color, and all background slots remain black.

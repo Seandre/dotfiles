@@ -6,22 +6,31 @@ opencode_config_dir=${OPENCODE_CONFIG_DIR:-"$HOME/.config/opencode"}
 opencode_themes_dir="$opencode_config_dir/themes"
 custom_theme_name=${OPENCODE_THEME_NAME:-"vscode-high-contrast"}
 vscode_server_dir=${VSCODE_AGENT_FOLDER:-"$HOME/.vscode-server"}
-vscode_machine_settings="$vscode_server_dir/data/Machine/settings.json"
+vscode_machine_settings=${VSCODE_SETTINGS_PATH:-"$vscode_server_dir/data/Machine/settings.json"}
+copy_all=false
 copy_opencode=false
 revert_opencode=false
 
 usage() {
   cat <<EOF
-Usage: scripts/setup-vscode-remote.sh [--copy-opencode] [--revert-opencode-theme]
+Usage: scripts/setup-vscode-remote.sh [--copy] [--copy-opencode] [--revert-opencode-theme]
 
 Install the Linux profile used through VS Code Remote SSH:
   nvim, portable tmux, VS Code Server machine settings, and OpenCode terminal theme files.
 
 Options:
+  --copy                    Copy all installed config instead of symlinking.
+                            Useful inside dev containers or ephemeral workspaces.
   --copy-opencode           Copy OpenCode theme files instead of symlinking them.
-                            Useful inside dev containers.
+                            Kept for older workflows; --copy is preferred for containers.
   --revert-opencode-theme   Back up and remove the custom OpenCode theme selector
                             so OpenCode uses its built-in default TUI theme.
+
+Environment:
+  VSCODE_AGENT_FOLDER       VS Code Server root. Defaults to ~/.vscode-server.
+  VSCODE_SETTINGS_PATH      Exact VS Code settings target path, if the container
+                            uses a nonstandard server/settings layout.
+  OPENCODE_CONFIG_DIR       OpenCode config root. Defaults to ~/.config/opencode.
 
 Existing files/directories are moved to *.bak-YYYYmmddHHMMSS first.
 EOF
@@ -29,6 +38,10 @@ EOF
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    --copy)
+      copy_all=true
+      copy_opencode=true
+      ;;
     --copy-opencode)
       copy_opencode=true
       ;;
@@ -102,6 +115,16 @@ copy_file() {
   printf "copy: %s -> %s\n" "$source" "$target"
 }
 
+copy_dir() {
+  source=$1
+  target=$2
+
+  mkdir -p "$(dirname -- "$target")"
+  backup_if_exists "$target"
+  cp -R "$source" "$target"
+  printf "copy: %s -> %s\n" "$source" "$target"
+}
+
 ensure_real_dir() {
   path=$1
 
@@ -120,10 +143,37 @@ validate_json() {
 
   node -e '
     const fs = require("fs");
+    const path = require("path");
     for (const file of process.argv.slice(1)) {
       JSON.parse(fs.readFileSync(file, "utf8"));
       console.log("ok: valid JSON " + file);
     }
+    const repo = process.env.REPO_DIR;
+    const tui = JSON.parse(fs.readFileSync(path.join(repo, "opencode/tui.json"), "utf8"));
+    const themeFile = path.join(repo, "opencode/themes", tui.theme + ".json");
+    if (!fs.existsSync(themeFile)) {
+      throw new Error("OpenCode theme file missing: " + themeFile);
+    }
+    const theme = JSON.parse(fs.readFileSync(themeFile, "utf8"));
+    const missing = [];
+    for (const [slot, value] of Object.entries(theme.theme || {})) {
+      for (const mode of ["dark", "light"]) {
+        if (!value || typeof value[mode] !== "string") {
+          missing.push(slot + "." + mode + ": missing");
+        } else if (!theme.defs || !theme.defs[value[mode]]) {
+          missing.push(slot + "." + mode + ": unresolved " + value[mode]);
+        }
+      }
+    }
+    if (missing.length > 0) {
+      throw new Error("OpenCode theme references invalid colors:\n" + missing.join("\n"));
+    }
+    for (const [slot, value] of Object.entries(theme.theme || {})) {
+      if (/^background|Bg$/i.test(slot) && (value.dark !== "black" || value.light !== "black")) {
+        throw new Error("OpenCode background slot is not black: " + slot);
+      }
+    }
+    console.log("ok: OpenCode theme selected " + tui.theme);
   ' \
     "$repo_dir/vscode/settings.json" \
     "$repo_dir/opencode/tui.json" \
@@ -174,11 +224,19 @@ if [ "$revert_opencode" = true ]; then
   exit 0
 fi
 
+REPO_DIR=$repo_dir
+export REPO_DIR
 validate_json
 
-link_path "$repo_dir/nvim" "$HOME/.config/nvim"
-link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
-link_path "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
+if [ "$copy_all" = true ]; then
+  copy_dir "$repo_dir/nvim" "$HOME/.config/nvim"
+  copy_file "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+  copy_file "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
+else
+  link_path "$repo_dir/nvim" "$HOME/.config/nvim"
+  link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+  link_path "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
+fi
 
 if [ "$copy_opencode" = true ]; then
   install_opencode_copies

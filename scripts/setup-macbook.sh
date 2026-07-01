@@ -64,16 +64,45 @@ validate_json() {
 
   node -e '
     const fs = require("fs");
+    const path = require("path");
     for (const file of process.argv.slice(1)) {
       JSON.parse(fs.readFileSync(file, "utf8"));
       console.log("ok: valid JSON " + file);
     }
+    const repo = process.env.REPO_DIR;
+    const tui = JSON.parse(fs.readFileSync(path.join(repo, "opencode/tui.json"), "utf8"));
+    const themeFile = path.join(repo, "opencode/themes", tui.theme + ".json");
+    if (!fs.existsSync(themeFile)) {
+      throw new Error("OpenCode theme file missing: " + themeFile);
+    }
+    const theme = JSON.parse(fs.readFileSync(themeFile, "utf8"));
+    const missing = [];
+    for (const [slot, value] of Object.entries(theme.theme || {})) {
+      for (const mode of ["dark", "light"]) {
+        if (!value || typeof value[mode] !== "string") {
+          missing.push(slot + "." + mode + ": missing");
+        } else if (!theme.defs || !theme.defs[value[mode]]) {
+          missing.push(slot + "." + mode + ": unresolved " + value[mode]);
+        }
+      }
+    }
+    if (missing.length > 0) {
+      throw new Error("OpenCode theme references invalid colors:\n" + missing.join("\n"));
+    }
+    for (const [slot, value] of Object.entries(theme.theme || {})) {
+      if (/^background|Bg$/i.test(slot) && (value.dark !== "black" || value.light !== "black")) {
+        throw new Error("OpenCode background slot is not black: " + slot);
+      }
+    }
+    console.log("ok: OpenCode theme selected " + tui.theme);
   ' \
     "$repo_dir/vscode/settings.json" \
     "$repo_dir/opencode/tui.json" \
     "$repo_dir/opencode/themes/vscode-high-contrast.json"
 }
 
+REPO_DIR=$repo_dir
+export REPO_DIR
 validate_json
 
 link_path "$repo_dir/nvim" "$HOME/.config/nvim"
