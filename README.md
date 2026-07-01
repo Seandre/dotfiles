@@ -47,6 +47,7 @@ This links:
 
 - `nvim/` -> `~/.config/nvim`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf`
+- `tmux/copy-to-clipboard.sh` -> `~/.local/bin/tmux-copy-to-clipboard`
 - `vscode/settings.json` -> VS Code Server machine `settings.json`
 - `opencode/tui.json` and `opencode/themes/` -> `~/.config/opencode`
 
@@ -62,6 +63,7 @@ This copies:
 
 - `nvim/` -> `~/.config/nvim`
 - `tmux/remote.tmux.conf` -> `~/.tmux.conf`
+- `tmux/copy-to-clipboard.sh` -> `~/.local/bin/tmux-copy-to-clipboard`
 - `vscode/settings.json` -> VS Code Server machine `settings.json`
 - `opencode/tui.json` -> `~/.config/opencode/tui.json`
 - `opencode/themes/vscode-high-contrast.json` -> `~/.config/opencode/themes/vscode-high-contrast.json`
@@ -80,7 +82,7 @@ To revert OpenCode to its built-in default TUI theme inside the Linux environmen
 
 This backs up and removes the OpenCode TUI theme selector and the custom `vscode-high-contrast` theme file from `~/.config/opencode`.
 
-The remote tmux config avoids TPM plugins, macOS-only clipboard commands, local paths, battery/status helpers, and Nerd Font glyphs. Clipboard integration uses tmux's native `set-clipboard on`, which works with OSC52 when the terminal and SSH path allow it.
+The remote tmux config avoids TPM plugins, local paths, battery/status helpers, and Nerd Font glyphs. It enables mouse support for pane clicks, scrolling, resizing, and drag selection. Copy-mode `y`, Enter, and mouse drag copy through `~/.local/bin/tmux-copy-to-clipboard`, which uses `pbcopy`, `wl-copy`, `xclip`, `xsel`, WSL `clip.exe`, or `powershell.exe` when available. It also keeps tmux's native `set-clipboard on` enabled for terminals that support OSC52.
 
 ## Remote SSH Linux Setup
 

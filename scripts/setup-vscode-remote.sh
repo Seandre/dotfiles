@@ -7,6 +7,7 @@ opencode_themes_dir="$opencode_config_dir/themes"
 custom_theme_name=${OPENCODE_THEME_NAME:-"vscode-high-contrast"}
 vscode_server_dir=${VSCODE_AGENT_FOLDER:-"$HOME/.vscode-server"}
 vscode_machine_settings=${VSCODE_SETTINGS_PATH:-"$vscode_server_dir/data/Machine/settings.json"}
+tmux_copy_command="$HOME/.local/bin/tmux-copy-to-clipboard"
 copy_all=false
 copy_opencode=false
 revert_opencode=false
@@ -16,7 +17,8 @@ usage() {
 Usage: scripts/setup-vscode-remote.sh [--copy] [--copy-opencode] [--revert-opencode-theme]
 
 Install the Linux profile used through VS Code Remote SSH:
-  nvim, portable tmux, VS Code Server machine settings, and OpenCode terminal theme files.
+  nvim, portable tmux, tmux clipboard helper, VS Code Server machine settings,
+  and OpenCode terminal theme files.
 
 Options:
   --copy                    Copy all installed config instead of symlinking.
@@ -231,12 +233,15 @@ validate_json
 if [ "$copy_all" = true ]; then
   copy_dir "$repo_dir/nvim" "$HOME/.config/nvim"
   copy_file "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+  copy_file "$repo_dir/tmux/copy-to-clipboard.sh" "$tmux_copy_command"
   copy_file "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
 else
   link_path "$repo_dir/nvim" "$HOME/.config/nvim"
   link_path "$repo_dir/tmux/remote.tmux.conf" "$HOME/.tmux.conf"
+  link_path "$repo_dir/tmux/copy-to-clipboard.sh" "$tmux_copy_command"
   link_path "$repo_dir/vscode/settings.json" "$vscode_machine_settings"
 fi
+chmod +x "$tmux_copy_command"
 
 if [ "$copy_opencode" = true ]; then
   install_opencode_copies
