@@ -20,7 +20,11 @@ if has('termguicolors')
 endif
 
 syntax enable
-filetype plugin indent on
+if exists('$TMUX')
+  filetype plugin on
+else
+  filetype plugin indent on
+endif
 
 set number
 set hidden
@@ -35,6 +39,16 @@ set formatoptions-=o
 
 if exists('$TMUX')
   set paste
+  set noautoindent
+  set nosmartindent
+  set nocindent
+
+  augroup remote_tmux_paste_safe
+    autocmd!
+    autocmd VimEnter,BufEnter,FileType * set paste
+    autocmd VimEnter,BufEnter,FileType * setlocal noautoindent nosmartindent nocindent indentexpr= indentkeys=
+    autocmd VimEnter,BufEnter,FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+  augroup END
 endif
 
 highlight clear Normal
